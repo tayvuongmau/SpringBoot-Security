@@ -25,7 +25,7 @@ public class MyUserDetailService implements UserDetailsService {
 
     //ghi đè phương thức truy vấn đến db lấy ra đối tượng được có username được truyê vào từ login
     @Override
-    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
+    public StudentDetail loadUserByUsername(String name) throws UsernameNotFoundException {
         Optional<Student> student = null;
         try {
             student = studentRepository.findByName(name);
@@ -33,6 +33,7 @@ public class MyUserDetailService implements UserDetailsService {
             log.error("NOT FOUND STUDENT", new UsernameNotFoundException(name));
         }
         //từ thông tin user truy vấn từ db lên sẽ tiến hành map nó thành object người dùng để đưa vào security quản lí
-        return student.map(StudentDetail::new).get();
+        return new StudentDetail(student.get());
+//        return student.map(StudentDetail::new).get();
     }
 }
