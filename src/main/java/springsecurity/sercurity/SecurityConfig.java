@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,11 +36,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/login").permitAll() //tất cả người dùng đều vào được trang đăng nhập này
-                .anyRequest().authenticated()   // Tất cả các request khác đều cần phải xác thực mới được truy cập
                 .antMatchers("/user").hasRole("USER")
                 .antMatchers("/admin").hasRole("ADMIN")
-                .and().formLogin();
+                .antMatchers("/login").permitAll() //tất cả người dùng đều vào được trang đăng nhập này
+                .anyRequest().authenticated();   // Tất cả các request khác đều cần phải xác thực mới được truy cập
+
         // Thêm một lớp Filter kiểm tra jwt
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }

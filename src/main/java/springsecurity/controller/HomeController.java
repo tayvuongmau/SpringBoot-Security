@@ -26,6 +26,8 @@ public class HomeController {
     private AuthenticationManager authenticationManager;
     @Autowired
     private JwtTokenProvider tokenProvider;
+    @Autowired
+    private MyUserDetailService userDetailService;
 
     @GetMapping("/")
     public String home(){
@@ -60,6 +62,9 @@ public class HomeController {
         // Nếu không xảy ra exception tức là thông tin hợp lệ
         // Set thông tin authentication vào Security Context
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        StudentDetail studentDetail = userDetailService.loadUserByUsername(request.getName());
+
         // Trả về jwt cho người dùng
         String jwt = tokenProvider.generateToken((StudentDetail) authentication.getPrincipal());
         return new AuthenticationResponse(jwt);
