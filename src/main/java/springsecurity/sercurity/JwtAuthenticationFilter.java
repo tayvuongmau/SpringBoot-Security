@@ -41,8 +41,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         //chuỗi không null và bắt đầu bằng Bearer
         if (bearerToken!=null && bearerToken.startsWith("Bearer ")){
             //từ chuỗi lấy được từ hearder cắt lấy đoạn jwt bắt đầu từ vị trí thứ 7 (bỏ qua phần "Bearer ")
+            logger.info("Lấy được đoạn mã token thành công");
             return bearerToken.substring(7);
         }
+        logger.error("Không tồn tại token nào");
         return null;
     }
 
@@ -64,6 +66,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     authentication.setDetails(
                             new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
+                    logger.info("Thông tin người dùng hợp lệ");
                 }
             }
         }catch (Exception e){

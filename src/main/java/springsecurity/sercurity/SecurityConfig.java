@@ -18,13 +18,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;
-
-    @Autowired
-    private JwtTokenProvider tokenProvider;
-
     @Autowired
     private JwtAuthenticationFilter authenticationFilter;
-
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -36,11 +31,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/user").hasRole("USER")
-                .antMatchers("/admin").hasRole("ADMIN")
+                .antMatchers("/user").hasRole("USER") //chỉ được truy cập với role = ROLE_USER
+                .antMatchers("/admin").hasRole("ADMIN") //chỉ được truy cập với role = ROLE_ADMIN
                 .antMatchers("/login").permitAll() //tất cả người dùng đều vào được trang đăng nhập này
                 .anyRequest().authenticated();   // Tất cả các request khác đều cần phải xác thực mới được truy cập
-
         // Thêm một lớp Filter kiểm tra jwt
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
@@ -56,29 +50,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

@@ -1,6 +1,10 @@
 package springsecurity.model;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 //đây là dto requestbody ở form đăng nhập lấy thông tin về username và password ng dùng nhập vào
 public class AuthenticationRequest {
     private String name;
