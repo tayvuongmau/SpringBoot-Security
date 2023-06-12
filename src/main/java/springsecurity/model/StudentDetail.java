@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class StudentDetail implements UserDetails {
     private String name;
     private String password;
-    private int age;
+    private boolean activated;
     private List<GrantedAuthority> authorities;
 
     public StudentDetail() {
@@ -25,7 +25,7 @@ public class StudentDetail implements UserDetails {
     public StudentDetail(Student student) {
         this.name = student.getName();
         this.password = student.getPassword();
-        this.age = student.getAge();
+        this.activated = student.isActivated();
         //vì ví dụ bảng Student mỗi row đc fix cứng 1 role lên cần thao tác biến đổi một chút ở constructor
         this.authorities = Arrays.stream(student.getRole().split(","))
                 .map(SimpleGrantedAuthority::new)
@@ -64,6 +64,6 @@ public class StudentDetail implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return false;
     }
 }

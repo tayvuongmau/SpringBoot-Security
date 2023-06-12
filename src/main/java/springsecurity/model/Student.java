@@ -14,20 +14,18 @@ public class Student {
     private String fullname;
     private String role;
     private String email;
-    @Column(name = "isactive")
-    private String isActive;
-
+    private boolean activated;
     public Student() {
     }
 
-    public Student(String name, String password, int age, String fullname, String role, String email, String isActive) {
+    public Student(String name, String password, int age, String fullname, String role, String email, boolean activated) {
         this.name = name;
         this.password = password;
         this.age = age;
         this.fullname = fullname;
         this.role = role;
         this.email = email;
-        this.isActive = isActive;
+        this.activated = activated;
     }
 
     public Integer getId() {
@@ -86,11 +84,11 @@ public class Student {
         this.email = email;
     }
 
-    public String isActive() {
-        return isActive;
+    public boolean isActivated() {
+        return activated;
     }
 
-    public void setActive(String active) {
-        isActive = active;
+    public void setActivated(boolean activated) {
+        this.activated = activated;
     }
 }

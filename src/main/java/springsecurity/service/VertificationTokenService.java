@@ -32,7 +32,7 @@ public class VertificationTokenService {
     public void save(Student student, String token){
         VerificationToken verificationToken = new VerificationToken(token,student);
         //set thời gian token có hiệu lực trong 24h kể từ lúc tạo mới tài khoản
-        verificationToken.setExpiryDate(calculateExpiryDate(24*60));
+        verificationToken.setExpiryDate(calculateExpiryDate(10));
         vertificationTokenRepository.save(verificationToken);
     }
 

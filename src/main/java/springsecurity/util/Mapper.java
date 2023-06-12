@@ -13,7 +13,7 @@ public class Mapper {
             student.setAge(registerStudent.getAge());
             student.setEmail(registerStudent.getEmail());
             student.setRole(registerStudent.getRole());
-            student.setActive(registerStudent.isActive());
+            student.setActivated(registerStudent.isActivated());
             return student;
     }
 }

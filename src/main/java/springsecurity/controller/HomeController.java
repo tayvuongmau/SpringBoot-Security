@@ -83,26 +83,24 @@ public class HomeController {
     public String activation(@RequestParam("token") String token){
         VerificationToken verificationToken = vertificationTokenService.findByToken(token);
         if (verificationToken==null){
-            return "Your veritifcation token is invalid";
+            return "Your verification token is invalid";
         }else {
             Student student = verificationToken.getStudent();
             //nếu student chưa active
-            if(student.isActive().equals("false")){
+            if(!student.isActivated()){
                 //lấy ra thời gian hiện tại
                 Timestamp curentTimestamp = new Timestamp(System.currentTimeMillis());
                 //kiểm tra thời gian tồn tại của token
                 if(verificationToken.getExpiryDate().before(curentTimestamp)){
                     return "Đã hết thời gia kích hoạt";
                 }else {
-                    //set lại trạng thái kích hoạt
-                    student.setActive("true");
+                    //set lại trạng thái kích
+                    student.setActivated(true);
                     studentService.save(student);
-                    return "Kích hoạt tài khoản thành công";
                 }
             }
         }
         //thêm /activation vào security config
-
         return "Your account has been activated";
     }
 
