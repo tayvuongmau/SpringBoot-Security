@@ -1,26 +1,20 @@
 package springsecurity.model;
 
-import javax.persistence.*;
+import java.util.Date;
 
-@Entity
-@Table(name = "students")
-public class Student {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class RegisterStudent {
     private String name;
     private String password;
     private int age;
     private String fullname;
-    private String role;
+    private String role = "ROLE_USER";
     private String email;
-    @Column(name = "isactive")
-    private String isActive;
+    private String isActive = "false";
 
-    public Student() {
+    public RegisterStudent() {
     }
 
-    public Student(String name, String password, int age, String fullname, String role, String email, String isActive) {
+    public RegisterStudent(String name, String password, int age, String fullname, String role, String email, String isActive) {
         this.name = name;
         this.password = password;
         this.age = age;
@@ -28,14 +22,6 @@ public class Student {
         this.role = role;
         this.email = email;
         this.isActive = isActive;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -62,20 +48,20 @@ public class Student {
         this.age = age;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     public String getFullname() {
         return fullname;
     }
 
     public void setFullname(String fullname) {
         this.fullname = fullname;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getEmail() {

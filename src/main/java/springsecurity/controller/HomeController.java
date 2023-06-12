@@ -8,24 +8,28 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import springsecurity.model.AuthenticationRequest;
-import springsecurity.model.AuthenticationResponse;
-import springsecurity.model.StudentDetail;
+import org.springframework.web.bind.annotation.*;
+import springsecurity.model.*;
 import springsecurity.sercurity.JwtTokenProvider;
 import springsecurity.service.MyUserDetailService;
+import springsecurity.service.StudentService;
+import springsecurity.service.VertificationTokenService;
+import springsecurity.util.Mapper;
+
+import java.sql.Timestamp;
 
 @RestController
 public class HomeController {
     private final Logger log = LoggerFactory.getLogger(HomeController.class);
 
     @Autowired
+    private VertificationTokenService vertificationTokenService;
+    @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
     private JwtTokenProvider tokenProvider;
+    @Autowired
+    private StudentService studentService;
 
     @GetMapping("/")
     public String home(){
@@ -64,4 +68,73 @@ public class HomeController {
         String jwt = tokenProvider.generateToken((StudentDetail) authentication.getPrincipal());
         return new AuthenticationResponse(jwt);
     }
+
+    @PostMapping("/register")
+    public String register(@RequestBody RegisterStudent registerStudent){
+        studentService.register(registerStudent);
+        return "Please check your mailbox to active your account.";
+    }
+
+
+    @GetMapping("/activation")
+    public String activation(@RequestParam("token") String token){
+        VerificationToken verificationToken = vertificationTokenService.findByToken(token);
+        if (verificationToken==null){
+            return "Your veritifcation token is invalid";
+        }else {
+            Student student = verificationToken.getStudent();
+            //nếu student chưa active
+            if(student.isActive().equals("false")){
+                //lấy ra thời gian hiện tại
+                Timestamp curentTimestamp = new Timestamp(System.currentTimeMillis());
+                //kiểm tra thời gian tồn tại của token
+                if(verificationToken.getExpiryDate().before(curentTimestamp)){
+                    return "Đã hết thời gia kích hoạt";
+                }else {
+                    //set lại trạng thái kích hoạt
+                    student.setActive("true");
+                    studentService.save(student);
+                    return "Kích hoạt tài khoản thành công";
+                }
+            }
+        }
+        //thêm /activation vào security config
+
+        return "Your account has been activated";
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
