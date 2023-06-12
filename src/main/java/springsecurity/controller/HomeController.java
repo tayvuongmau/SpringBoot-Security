@@ -3,6 +3,8 @@ package springsecurity.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -48,7 +50,7 @@ public class HomeController {
 
     //api này được gọi tới khi đăng nhập rồi sinh ra và trả lại jwt cho client
     @PostMapping("/login")
-    public AuthenticationResponse login(@RequestBody AuthenticationRequest request){
+    public ResponseEntity<Result> login(@RequestBody AuthenticationRequest request){
         Authentication authentication = null;
         try {
             //xác thực từ username và password nhập vào
@@ -60,30 +62,31 @@ public class HomeController {
             );
         }catch (BadCredentialsException e){
             log.error("Thông tin đăng nhập không đúng", new IllegalArgumentException());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Result("Sai thông tin đăng nhập",""));
         }
         // Nếu không xảy ra exception tức là thông tin hợp lệ
         // Set thông tin authentication vào Security Context
         SecurityContextHolder.getContext().setAuthentication(authentication);
         // Trả về jwt cho người dùng
         String jwt = tokenProvider.generateToken((StudentDetail) authentication.getPrincipal());
-        return new AuthenticationResponse(jwt);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Result("Đăng nhập thành công",new AuthenticationResponse(jwt)));
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody RegisterStudent registerStudent){
+    public ResponseEntity<Result> register(@RequestBody RegisterStudent registerStudent){
         Student student = studentService.register(registerStudent);
         if (student==null){
-            return "Username already exist.";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Result("Username already exist.",""));
         }
-        return "Please check your mailbox to active your account.";
+        return ResponseEntity.status(HttpStatus.CREATED).body(new Result("Please check your mailbox to active your account.",""));
     }
 
 
     @GetMapping("/activation")
-    public String activation(@RequestParam("token") String token){
+    public ResponseEntity<Result> activation(@RequestParam("token") String token){
         VerificationToken verificationToken = vertificationTokenService.findByToken(token);
         if (verificationToken==null){
-            return "Your verification token is invalid";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Result("Your verification token is invalid",""));
         }else {
             Student student = verificationToken.getStudent();
             //nếu student chưa active
@@ -92,7 +95,7 @@ public class HomeController {
                 Timestamp curentTimestamp = new Timestamp(System.currentTimeMillis());
                 //kiểm tra thời gian tồn tại của token
                 if(verificationToken.getExpiryDate().before(curentTimestamp)){
-                    return "Đã hết thời gia kích hoạt";
+                    return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(new Result("Đã hết thời gia kích hoạt",""));
                 }else {
                     //set lại trạng thái kích
                     student.setActivated(true);
@@ -101,7 +104,7 @@ public class HomeController {
             }
         }
         //thêm /activation vào security config
-        return "Your account has been activated";
+        return ResponseEntity.status(HttpStatus.OK).body(new Result("Your account has been activated.",""));
     }
 
 

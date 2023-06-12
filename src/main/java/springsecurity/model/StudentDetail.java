@@ -64,6 +64,6 @@ public class StudentDetail implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return activated;
     }
 }

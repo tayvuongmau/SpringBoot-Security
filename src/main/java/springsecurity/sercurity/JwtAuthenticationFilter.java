@@ -44,8 +44,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             logger.info("Lấy được đoạn mã token thành công");
             return bearerToken.substring(7);
         }
-        logger.error("Không tồn tại token nào");
-        return null;
+//        logger.error("Không tồn tại token nào");
+        return "Không tồn tại token nào";
     }
 
 
