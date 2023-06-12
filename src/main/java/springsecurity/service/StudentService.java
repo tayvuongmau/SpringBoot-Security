@@ -1,5 +1,7 @@
 package springsecurity.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import springsecurity.model.RegisterStudent;
 import springsecurity.model.Student;
@@ -14,6 +16,8 @@ public class StudentService {
     private StudentRepository studentRepository;
     private VertificationTokenService vertificationTokenService;
     private EmailService emailService;
+
+    private final Logger log = LoggerFactory.getLogger(StudentService.class);
 
     public StudentService(StudentRepository studentRepository,
                           VertificationTokenService vertificationTokenService,
@@ -31,34 +35,23 @@ public class StudentService {
 
     @Transactional
     public Student register(RegisterStudent registerStudent){
-        Student student = Mapper.studentRegToStudent(registerStudent);
-//        Optional<Student> saved = Optional.of(save(student));
-//        //tạo và lưu vertification nếu user được tạo
-//        saved.ifPresent( u -> {
-//            try {
-//                //tự sinh 1 chuỗi token random
-//                String token = UUID.randomUUID().toString();
-//                //tiến hành tạo mới đối tượng vertification với student vừa tạo + token tự sinh
-//                vertificationTokenService.save(saved.get(), token);
-//                // gửi link vertification trong mail
-//                emailService.sendEmail(u);
-//            }catch (Exception e){
-//                e.printStackTrace();
-//            }
-//        });
-//        return saved.get();
-        save(student);
-        Student stu = studentRepository.findById(student.getId()).orElse(null);
+        Student stu = studentRepository.findByName(registerStudent.getName()).orElse(null);
         if (stu!=null){
+            log.error("Ten tai khoan da ton tai");
+            return null;
+        }
+        Student student = Mapper.studentRegToStudent(registerStudent);
+        save(student);
+        if (student!=null){
             try {
                 String token = UUID.randomUUID().toString();
-                vertificationTokenService.save(stu, token);
-                emailService.sendEmail(stu);
+                vertificationTokenService.save(student, token);
+                emailService.sendEmail(student);
             }catch (Exception e){
                 e.printStackTrace();
             }
         }
-        return stu;
+        return student;
     }
 
 

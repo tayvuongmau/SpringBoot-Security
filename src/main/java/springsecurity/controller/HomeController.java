@@ -71,7 +71,10 @@ public class HomeController {
 
     @PostMapping("/register")
     public String register(@RequestBody RegisterStudent registerStudent){
-        studentService.register(registerStudent);
+        Student student = studentService.register(registerStudent);
+        if (student==null){
+            return "Username already exist.";
+        }
         return "Please check your mailbox to active your account.";
     }
 

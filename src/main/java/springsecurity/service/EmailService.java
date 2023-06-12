@@ -31,7 +31,7 @@ public class EmailService {
             try {
                 MimeMessage message =  javaMailSender.createMimeMessage();
                 MimeMessageHelper helper = new MimeMessageHelper(message, true);
-                String contextMail = "Thank you for signing up. Please click on the link to verify your email address"+
+                String contextMail = "Thank you for signing up. Please click on the link to verify your email address "+
                         "http://localhost:8080/activation?token="+token;
                 helper.setTo(student.getEmail());
                 helper.setSubject("Email address vertification");
