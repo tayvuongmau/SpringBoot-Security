@@ -1,4 +1,5 @@
 **Đăng ký - Kích hoạt tài khoản bằng Gmail**
+
 **1. Giới thiệu tổng quát**
 Khi người dùng tiến hành đăng kí tài khoản để có thể truy cập vào các url chỉ được phép truy cập khi được cấp quyền (đăng kí tài khoản và đăng nhập thành công). Tài khoản người dùng mới khởi tạo sẽ mặc định có role là "ROLE_USER" và có trạng thái activated là false. Khi đăng kí thành công, phía server sẽ gửi tới email đăng kí của người dùng 1 đường link dùng để kích hoạt tài khoản (lúc đó trạng thái activated mới chuyển thành true). Link kích hoạt tài khoản sẽ có thời gian sử dụng trong 10 phút, sau 10 phút nếu người dùng không kích hoạt thì sẽ phải tạo mới lại tài khoản.
 **2. Chuẩn bị**
@@ -69,7 +70,9 @@ Tại method /activation sẽ xử lí thao tác kích hoạt tài khoản khi n
 
 
 **Xác thực– phân quyền với Spring Security + JWT**
+
 **1. Giới thiệu**
+
 **Spring Security** là một trong những phần quan trọng của Spring Framework, nó giúp chúng ta phân quyền và xác thực người dùng trước khi cho phép họ truy cập vào các tài nguyên phù hợp với vai trò của từng đối tượng tiến hành đăng nhập.
 *Lưu ý : Nếu như ở phiên bản Spring Security 5 chúng ta cấu hình Security bằng cách extends class WebSecurityConfigAdapter, thì ở phiên bản mới nhất hiện tại class WebSecurityConfigAdapter đã không còn được Spring Boot hỗ trợ và bị xóa ra khỏi thư viện Spring Security 6.*
 **JWT (JSON Web Token)** là một chuỗi mã hóa được gửi kèm trong Header của Client request có tác dụng giúp phía Server xác thực request người dùng có hợp lệ hay không. Mỗi khi người dùng tiến hành đăng nhập thành công sẽ được phía Server sinh ra một JWT trả lại phía Client sẽ được lưu ở session hoặc cookie trong một thời gian tuỳ thuộc phía Server quy định . JWT dưới dạng JSON bao gồm ba phần chính: Header, Payload và Signature.
