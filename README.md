@@ -1,6 +1,7 @@
 **Đăng ký - Kích hoạt tài khoản bằng Gmail**
 
 **1. Giới thiệu tổng quát**
+
 Khi người dùng tiến hành đăng kí tài khoản để có thể truy cập vào các url chỉ được phép truy cập khi được cấp quyền (đăng kí tài khoản và đăng nhập thành công). Tài khoản người dùng mới khởi tạo sẽ mặc định có role là "ROLE_USER" và có trạng thái activated là false. Khi đăng kí thành công, phía server sẽ gửi tới email đăng kí của người dùng 1 đường link dùng để kích hoạt tài khoản (lúc đó trạng thái activated mới chuyển thành true). Link kích hoạt tài khoản sẽ có thời gian sử dụng trong 10 phút, sau 10 phút nếu người dùng không kích hoạt thì sẽ phải tạo mới lại tài khoản.
 
 **2. Chuẩn bị**
