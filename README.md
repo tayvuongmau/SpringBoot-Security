@@ -2,7 +2,9 @@
 
 **1. Giới thiệu tổng quát**
 Khi người dùng tiến hành đăng kí tài khoản để có thể truy cập vào các url chỉ được phép truy cập khi được cấp quyền (đăng kí tài khoản và đăng nhập thành công). Tài khoản người dùng mới khởi tạo sẽ mặc định có role là "ROLE_USER" và có trạng thái activated là false. Khi đăng kí thành công, phía server sẽ gửi tới email đăng kí của người dùng 1 đường link dùng để kích hoạt tài khoản (lúc đó trạng thái activated mới chuyển thành true). Link kích hoạt tài khoản sẽ có thời gian sử dụng trong 10 phút, sau 10 phút nếu người dùng không kích hoạt thì sẽ phải tạo mới lại tài khoản.
+
 **2. Chuẩn bị**
+
 Các thư viện cần có :
 - validation-api
 - hibernate-validator
@@ -19,6 +21,7 @@ Bảng tạo sẵn ở database (cũng có thể cấu hình trong configure khi
 <img src="https://i.imgur.com/8NtJU8f.png">
 
 **4. Xây dựng project**
+
 Để có thể liên kết với database ta phải cấu hình phầnkeets nối tới database trong file cấu hình propertites
 
 <img src="https://i.imgur.com/1eN47Hf.png">
@@ -81,6 +84,7 @@ Tại method /activation sẽ xử lí thao tác kích hoạt tài khoản khi n
 - Signature: Được tạo ra bằng cách ký (sign) Header và Payload sử dụng một khóa bí mật (secret key) hoặc một cặp khóa công khai, riêng tư.
 
 **2. Chuẩn bị**
+
 Các thư viện cần có:
 - Spring Boot version 2.1.6.RELEASE
 - Spring Security (tự cập nhật theo version của Spring Boot)
@@ -90,9 +94,11 @@ Các thư viện cần có:
 - io.jsonwebtoken.jwtt (lấy từ bên ngoài do trong spring boot không có, dùng để mã hoá thông tin thành  jwt)
 
 **3. Luồng hoạt động**
+
 <img src="https://i.imgur.com/uwceXgB.png">
 
 **4. Xây dựng project**
+
 Tạo package Model có chứa class object, trong đó class Student tham chiếu tới bảng trong database
 
 <img src="https://i.imgur.com/f2boRz9.png">
