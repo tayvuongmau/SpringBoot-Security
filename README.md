@@ -17,7 +17,7 @@ Các thư viện cần có:
 - io.jsonwebtoken.jwtt (lấy từ bên ngoài do trong spring boot không có, dùng để mã hoá thông tin thành  jwt)
 
 3. Luồng hoạt động
-<img src="https://imgur.com/ADuAqSQ">
+<img src="https://imgur.com/uwceXgB">
 
 4. Xây dựng project
 Tạo package Model có chứa class object, trong đó class Student tham chiếu tới bảng trong database
