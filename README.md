@@ -17,39 +17,40 @@ Các thư viện cần có:
 - io.jsonwebtoken.jwtt (lấy từ bên ngoài do trong spring boot không có, dùng để mã hoá thông tin thành  jwt)
 
 3. Luồng hoạt động
-
+<img src="https://imgur.com/ADuAqSQ">
 
 4. Xây dựng project
 Tạo package Model có chứa class object, trong đó class Student tham chiếu tới bảng trong database
-
+<img src="https://imgur.com/ADuAqSQ">
 
 Mặc định trong Spring Security sẽ  sử dụng 1 đối tượng UserDetails để chứa toàn bộ thông tin người dùng, lên ta cần tạo 1 class chuyển các thông tin từ Student thành StudentDetail
-
+<img src="https://imgur.com/ADuAqSQ">
 Ta có thêm 2 class , class AuthenticationRequest dùng để chứa thông tin đăng nhập từ Client gửi lên và class AuthenticationResponse dùng để chứa chuỗi Jwt trả về cho Client
-
+<img src="https://imgur.com/ADuAqSQ">
+<img src="https://imgur.com/ADuAqSQ">
 
 Khi người dùng đăng nhập thì Spring Security sẽ cần lấy các thông tin UserDetails hiện có để kiểm tra. Vì vậy, bạn cần tạo ra một class kế thừa lớp UserDetailsService mà Spring Security cung cấp để làm nhiệm vụ này. Nếu tồn tại tài khoản đăng nhập thì sẽ trả ra dữ liệu là StudentDetail để Security tiến hành xử lí các tác vụ tiếp theo, vì Security sẽ không làm việc với Object thông thường mà chỉ làm việc với Object UserDetails.
-
+<img src="https://imgur.com/ADuAqSQ">
 Sau khi đã có được thông tin của người dùng, phía Server sẽ tiến hành mã hoá thông tin của người dùng thành chuỗi JWT, ta tiến hành tạo class JwtTokenProvider để triển khai các thao tác liên quan tới việc tạo ra JWT
-
+<img src="https://imgur.com/ADuAqSQ">
 Ngoài ra tại class này ta sẽ triển khai đồng thời các method liên quan tới việc xác thực ngược lại token được gửi cùng request từ Client gửi lên, để kiểm tra xem token có đúng với của tài khoản tiến hành đăng nhập khi yêu cầu truy cập tới một Url nào đó không.
-
+<img src="https://imgur.com/ADuAqSQ">
 
 Tiếp theo ta cần tạo ra một class Filter có tên là JwtAuthenticationFilter, class Filter này sẽ có tác dụng kiểm tra token được đính kèm theo request được gửi lên từ Client trước khi request tới đích. Nó sẽ lấy Header Authorization ra và kiểm tra xem chuỗi JWT người dùng gửi lên có hợp lệ không.
 Đầu tiên là thao tác lấy ra được mã token từ request : 
-
+<img src="https://imgur.com/ADuAqSQ">
 Tiếp theo là thao tác kiểm tra token (generate ngược lấy dữ liệu từ token gửi lên)
-
+<img src="https://imgur.com/ADuAqSQ">
 Ta tiến hành cấu hình Security và kích hoạt cho phép Security được phép kiểm tra xác thực và phân quyền truy cập cho bất kì tài khoản nào tiến hành đăng nhập. 
 Lưu ý : vì đây là ví dụ lên sẽ không yêu cầu mật khẩu được mã hoá , thực tế sẽ phải có 1 method tiến hành mã hoá mật khẩu, và kiểm tra mật khẩu mã hoá đó!
-
+<img src="https://imgur.com/ADuAqSQ">
 
 Cuối cùng ta xây dựng Controller , nơi sẽ cấu hình các Url nào sẽ được quyền truy cập bởi các tài khoản có role nào , và quan trọng nhất là Url login sẽ trả ra chuỗi Jwt cho người dùng khi họ đăng nhập thành công.
 Đầu tiên là method sẽ trả lại chuỗi token cho Client khi nhận được thông tin đăng nhập từ phía Client
-
+<img src="https://imgur.com/ADuAqSQ">
 
 Tiếp theo là các Url sẽ được truy cập sau khi xác thực và phân quyền truy cập thành công
-
+<img src="https://imgur.com/ADuAqSQ">
 Url có /admin chỉ có nhưng tài khoản có role là ROLE_ADMIN mới có quyền truy cập
 Url có /user chỉ có nhưng tài khoản có role là ROLE_USER mới có quyền truy cập
 Url / thì mọi tài khoản đăng nhập và xác thực thành công đều có thể truy cập và áp dụng cho mọi role
