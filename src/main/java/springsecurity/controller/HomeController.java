@@ -10,6 +10,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import springsecurity.model.*;
 import springsecurity.sercurity.JwtTokenProvider;
@@ -18,7 +19,10 @@ import springsecurity.service.StudentService;
 import springsecurity.service.VertificationTokenService;
 import springsecurity.util.Mapper;
 
+import javax.validation.Valid;
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class HomeController {
@@ -72,8 +76,27 @@ public class HomeController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Result("Đăng nhập thành công",new AuthenticationResponse(jwt)));
     }
 
+    @GetMapping("/access-denied")
+    public ResponseEntity<Result> accessDenied(){
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new Result("403","Yêu cầu thất bại do bạn không có quyền truy cập hoặc tài khoản chưa kích hoạt"));
+    }
+
     @PostMapping("/register")
-    public ResponseEntity<Result> register(@RequestBody RegisterStudent registerStudent){
+    public ResponseEntity<Result> register(@RequestBody @Valid RegisterStudent registerStudent,
+                                           BindingResult bindingResult){
+        if (bindingResult.hasErrors()){
+            Map<String, String> errors = new HashMap<>();
+            bindingResult.getFieldErrors().forEach(
+                    error->errors.put(error.getField(),error.getDefaultMessage())
+            );
+            String msgErr ="";
+            for (String key : errors.keySet()){
+                msgErr += "Lỗi ở trường: " + key + ", lí do: " + errors.get(key) + "\n";
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new Result("Tạo tài khoản thất bại do giá trị nhập vào không phù hợp.",msgErr));
+        }
         Student student = studentService.register(registerStudent);
         if (student==null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Result("Username already exist.",""));

@@ -34,7 +34,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user").hasRole("USER") //chỉ được truy cập với role = ROLE_USER
                 .antMatchers("/admin").hasRole("ADMIN") //chỉ được truy cập với role = ROLE_ADMIN
                 .antMatchers("/login","/activation","/register","/test").permitAll() //tất cả người dùng đều vào được trang đăng nhập này
-                .anyRequest().authenticated();   // Tất cả các request khác đều cần phải xác thực mới được truy cập
+                .anyRequest().authenticated()   // Tất cả các request khác đều cần phải xác thực mới được truy cập
+                .and()
+                .exceptionHandling().accessDeniedPage("/access-denied");
         // Thêm một lớp Filter kiểm tra jwt
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }

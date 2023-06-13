@@ -8,9 +8,10 @@ public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(unique = true)
     private String name;
     private String password;
-    private int age;
+    private String age;
     private String fullname;
     private String role;
     private String email;
@@ -18,7 +19,7 @@ public class Student {
     public Student() {
     }
 
-    public Student(String name, String password, int age, String fullname, String role, String email, boolean activated) {
+    public Student(String name, String password, String age, String fullname, String role, String email, boolean activated) {
         this.name = name;
         this.password = password;
         this.age = age;
@@ -52,11 +53,11 @@ public class Student {
         this.password = password;
     }
 
-    public int getAge() {
+    public String getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(String age) {
         this.age = age;
     }
 
