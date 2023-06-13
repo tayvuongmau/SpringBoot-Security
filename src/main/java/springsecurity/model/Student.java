@@ -1,5 +1,8 @@
 package springsecurity.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 @Entity
@@ -16,10 +19,9 @@ public class Student {
     private String role;
     private String email;
     private boolean activated;
-    public Student() {
-    }
-
-    public Student(String name, String password, String age, String fullname, String role, String email, boolean activated) {
+    public Student() {}
+    public Student(String name, String password, String age, String fullname,
+                   String role, String email, boolean activated) {
         this.name = name;
         this.password = password;
         this.age = age;

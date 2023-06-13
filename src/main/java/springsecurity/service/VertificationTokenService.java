@@ -17,17 +17,17 @@ public class VertificationTokenService {
         this.vertificationTokenRepository = vertificationTokenRepository;
     }
 
-    //tim kiem thong tin ve user thong qua token
+    //tim kiem VerificationToken thong qua token
     public VerificationToken findByToken(String token){
         return vertificationTokenRepository.findByToken(token);
     }
 
-    //tim kiem token theo Student
+    //tim kiem VerificationToken theo Student
     public VerificationToken findByStudent(Student student){
         return vertificationTokenRepository.findByStudent(student);
     }
 
-    //tạo mới token khi có tài khoản mới được tạo
+    //tạo mới VerificationToken khi có tài khoản mới được tạo cùng mã token kích hoạt tương ứng
     @Transactional
     public void save(Student student, String token){
         VerificationToken verificationToken = new VerificationToken(token,student);

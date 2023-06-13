@@ -1,11 +1,12 @@
 package springsecurity.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.util.Date;
-
 public class RegisterStudent {
     @NotNull(message = "Tên đăng nhập không được bỏ trống")
     @Column(unique = true)

@@ -12,10 +12,13 @@ public class MailConfig {
     @Bean
     public JavaMailSender getJavaMailSender(){
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("smtp.gmail.com");//host mặc định khi dùng gmail
-        mailSender.setPort(587);//ssl: 465, tls: 587
+        //host mặc định khi dùng gmail
+        mailSender.setHost("smtp.gmail.com");
+        //ssl: 465, tls: 587
+        mailSender.setPort(587);
         mailSender.setUsername("tvm1302@gmail.com");//mail dùng để gửi
-        mailSender.setPassword("julbwejdocafkyko");//đây là mã an toàn khi cài đặt trong gmail cho phép ứng dụng khác truy cập vào
+        //đây là mã an toàn khi cài đặt trong gmail cho phép ứng dụng khác truy cập vào
+        mailSender.setPassword("julbwejdocafkyko");
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
