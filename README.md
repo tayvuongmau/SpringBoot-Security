@@ -1,3 +1,47 @@
+**Chức năng đa ngôn ngữ trong springboot**
+
+**1. Cấu hình chức năng**
+
+Ta tiến hành tạo một Class đặt tên là LocaleConfig được implement lại từ interface WebMvcConfigurer, class này ta đặt annotation là @Configuration. Trong CLass ta tiến hành triển khai các cấu hình cho việc lựa chọn và chuyển đổi ngôn ngữ hiển thị ra cho người dùng.
+Method localeResolver() sẽ cấu hình ngôn ngữ mặc định của ứng dụng khi người dùng bật lên, ở đây ta cài đặt mặc định là tiếng Việt.
+
+<img src="https://i.imgur.com/vHaiwhP.png">
+
+Method localeChangeInterceptor() sẽ triển khai cài đặt lựa chọn ngôn ngữ cần chuyển tới mà người dùng lựa chọn, cách thức này sẽ hiển thị ngôn ngữ được chọn cả trên thanh địa chỉ url thông qua request-param.
+Method addInterceptors(InterceptorRegistry registry) sẽ tiến hành thêm ngôn ngữ được chọn để hiển thị vào danh sách các ngôn ngữ của ứng dụng
+
+<img src="https://i.imgur.com/VsAhFd9.png">
+
+Cấu hình cuối cùng là địa chỉ dẫn tới file properties triển khai các nội dung hiển thị ở giao diện dưới các ngôn ngữ khác nhau
+
+<img src="https://i.imgur.com/DAfUIGu.png">
+
+Ở file properties cấu hình nội dung theo các ngôn ngữ cần được đặt tên file theo cấu hình đường dẫn bên trên , cụ thể ở ví dụ này tên file phải bắt đầu là message , _xx sẽ là ngôn ngữ hiển thị của file đó
+
+<img src="https://i.imgur.com/yENaMAP.png">
+
+**2. Cách triển khai**
+
+Cuối cùng là cách thức để chuyển nội dung cần hiển thị đa ngôn ngữ tới phía Client , chắc chắn ta cần phải nhúng interface MessageSource để có thể xử dụng :))
+
+<img src="https://i.imgur.com/RF6m0pI.png">
+
+Trong đó : - "activated-success" : là tên key của 1 đoạn tin nhắn được cấu hình trong file properties
+           - null : để mặc định
+           - LocaleContextHolder.getLocale() : đính kèm các ngôn ngữ thể hiện được nội dung của key "activated-success" 
+
+
+
+
+
+
+
+
+
+
+
+
+
 **Đăng ký - Kích hoạt tài khoản bằng Gmail**
 
 **1. Giới thiệu tổng quát**
