@@ -32,7 +32,7 @@ public class EmailService {
                 MimeMessage message =  javaMailSender.createMimeMessage();
                 MimeMessageHelper helper = new MimeMessageHelper(message, true);
                 String contextMail = "Thank you for signing up. Please click on the link to verify your email address "+
-                        "http://localhost:8080/activation?token="+token;
+                        "http://localhost:8080/accounts/activation?token="+token;
                 //địa ch nhận mail sẽ được lấy ra từ thông tin người dùng đăng kí
                 helper.setTo(student.getEmail());
                 //tiêu đề mail

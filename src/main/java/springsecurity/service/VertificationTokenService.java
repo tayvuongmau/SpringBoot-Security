@@ -1,5 +1,6 @@
 package springsecurity.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import springsecurity.model.Student;
 import springsecurity.model.VerificationToken;
@@ -11,11 +12,14 @@ import java.util.Calendar;
 
 @Service
 public class VertificationTokenService {
+    @Autowired
     private final VertificationTokenRepository vertificationTokenRepository;
 
+    @Autowired
     public VertificationTokenService(VertificationTokenRepository vertificationTokenRepository) {
         this.vertificationTokenRepository = vertificationTokenRepository;
     }
+
 
     //tim kiem VerificationToken thong qua token
     public VerificationToken findByToken(String token){

@@ -31,9 +31,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/user").hasRole("USER") //chỉ được truy cập với role = ROLE_USER
-                .antMatchers("/admin").hasRole("ADMIN") //chỉ được truy cập với role = ROLE_ADMIN
-                .antMatchers("/login","/activation","/register","/test").permitAll() //tất cả người dùng đều vào được trang đăng nhập này
+                .antMatchers("/users/**").hasRole("USER") //chỉ được truy cập với role = ROLE_USER
+                .antMatchers("/admins/**").hasRole("ADMIN") //chỉ được truy cập với role = ROLE_ADMIN
+                .antMatchers("/accounts/**","/page","/").permitAll() //tất cả người dùng đều vào được trang này
                 .anyRequest().authenticated()   // Tất cả các request khác đều cần phải xác thực mới được truy cập
                 .and()
                 .exceptionHandling().accessDeniedPage("/access-denied");
