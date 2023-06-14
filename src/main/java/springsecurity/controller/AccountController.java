@@ -1,6 +1,8 @@
 package springsecurity.controller;
 
 
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,19 +21,17 @@ import javax.validation.Valid;
 public class AccountController {
 
     private StudentService studentService;
-    private AuthenticationManager authenticationManager;
-    private JwtTokenProvider tokenProvider;
+    private MessageSource messageSource;
 
-    public AccountController(StudentService studentService, AuthenticationManager authenticationManager, JwtTokenProvider tokenProvider) {
+    public AccountController(StudentService studentService, MessageSource messageSource) {
         this.studentService = studentService;
-        this.authenticationManager = authenticationManager;
-        this.tokenProvider = tokenProvider;
+        this.messageSource = messageSource;
     }
 
     @GetMapping("/access-denied")
     public ResponseEntity<Result> accessDenied(){
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(new Result("403","Yêu cầu thất bại do bạn không có quyền truy cập hoặc tài khoản chưa kích hoạt"));
+                .body(new Result("403",messageSource.getMessage("access-denied",null, LocaleContextHolder.getLocale())));
     }
 
     @PostMapping("/register")
@@ -42,9 +42,11 @@ public class AccountController {
         }
         Student student = studentService.register(registerStudent);
         if (student==null){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Result("Username already exist.",""));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new Result(messageSource.getMessage("user-exist",null, LocaleContextHolder.getLocale()),""));
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(new Result("Please check your mailbox to active your account.",""));
+        return ResponseEntity.status(HttpStatus.CREATED).
+                body(new Result(messageSource.getMessage("check-mail",null, LocaleContextHolder.getLocale()),""));
     }
 
 

@@ -3,6 +3,8 @@ package springsecurity.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,24 +27,24 @@ import java.util.UUID;
 
 @Service
 public class StudentService {
-
-
     private StudentRepository studentRepository;
     private VertificationTokenService vertificationTokenService;
 
     private EmailService emailService;
     private AuthenticationManager authenticationManager;
     private JwtTokenProvider tokenProvider;
+    private MessageSource messageSource;
 
     @Autowired
     public StudentService(StudentRepository studentRepository, VertificationTokenService vertificationTokenService,
                           EmailService emailService, AuthenticationManager authenticationManager,
-                          JwtTokenProvider tokenProvider) {
+                          JwtTokenProvider tokenProvider, MessageSource messageSource) {
         this.studentRepository = studentRepository;
         this.vertificationTokenService = vertificationTokenService;
         this.emailService = emailService;
         this.authenticationManager = authenticationManager;
         this.tokenProvider = tokenProvider;
+        this.messageSource = messageSource;
     }
     private final Logger log = LoggerFactory.getLogger(StudentService.class);
 
@@ -92,14 +94,14 @@ public class StudentService {
                 msgErr += "Lỗi ở trường: " + key + ", lí do: " + errors.get(key) + "\n";
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new Result("Tạo tài khoản thất bại do giá trị nhập vào không phù hợp.",msgErr));
+                    .body(new Result(messageSource.getMessage("created-fail",null, LocaleContextHolder.getLocale()),msgErr));
     }
 
     public ResponseEntity<Result> checkVerificationToken(String token){
-        StudentService studentService = new StudentService();
         VerificationToken verificationToken = vertificationTokenService.findByToken(token);
         if (verificationToken==null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Result("Your verification token is invalid",""));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new Result(messageSource.getMessage("verification-token-invalid",null, LocaleContextHolder.getLocale()),""));
         }else {
             Student student = verificationToken.getStudent();
             //nếu student chưa active
@@ -108,7 +110,8 @@ public class StudentService {
                 Timestamp curentTimestamp = new Timestamp(System.currentTimeMillis());
                 //kiểm tra thời gian tồn tại của token
                 if(verificationToken.getExpiryDate().before(curentTimestamp)){
-                    return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(new Result("Đã hết thời gia kích hoạt",""));
+                    return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT)
+                            .body(new Result(messageSource.getMessage("expiry-date",null, LocaleContextHolder.getLocale()),""));
                 }else {
                     //set lại trạng thái kích hoạt
                     student.setActivated(true);
@@ -116,7 +119,8 @@ public class StudentService {
                 }
             }
         }
-        return ResponseEntity.status(HttpStatus.OK).body(new Result("Your account has been activated.",""));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new Result(messageSource.getMessage("activated-success",null, LocaleContextHolder.getLocale()),""));
     }
 
     public ResponseEntity<Result> login(AuthenticationRequest request){
@@ -127,7 +131,7 @@ public class StudentService {
             if (student==null){
                 log.error("Thông tin đăng nhập không đúng");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(new Result("Sai thông tin đăng nhập","Gõ sai tài khoản rồi con lợn"));
+                        .body(new Result(messageSource.getMessage("info-false",null, LocaleContextHolder.getLocale()),"Gõ sai tài khoản rồi con lợn"));
             }
             authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -144,7 +148,7 @@ public class StudentService {
         // Trả về jwt cho người dùng
         String jwt = tokenProvider.generateToken((StudentDetail) authentication.getPrincipal());
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new Result("Đăng nhập thành công",jwt));
+                .body(new Result(messageSource.getMessage("login-success",null, LocaleContextHolder.getLocale()),jwt));
     }
 
 
